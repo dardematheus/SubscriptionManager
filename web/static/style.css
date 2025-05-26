@@ -1,0 +1,67 @@
+:root {
+    --cor-azul: #a5d8ff;
+    --cor-creme: #faf4ed;
+    --cor-shadow: #dcdcdc;
+}
+
+body {
+    background-color: var(--cor-creme);
+    color: var(--cor-azul);
+    font-family: 'Arial', sans-serif;
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+    margin: 0;   
+}
+
+main{
+    flex: 1;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.btn-register {
+    color: var(--cor-azul);
+    border-color: var(--cor-azul);
+    border: 2px solid var(--cor-azul);
+    border-radius: 18px;
+    padding: 12px 22px;
+    box-shadow: 0 7px 7px var(--cor-shadow);
+}
+
+.btn-register:hover {
+    background-color: var(--cor-azul);
+    color: var(--cor-creme)
+}
+
+.confirm-button {
+    border-color: var(--cor-azul);
+    color: var(--cor-azul);
+    border: 2px solid var(--cor-azul);
+    box-shadow: 0 7px 7px var(--cor-shadow);
+}
+
+.confirm-button:hover {
+    background-color: var(--cor-azul)!important;
+    border-color: var(--cor-azul)!important;
+}
+
+.plain-text {
+    color: var(--cor-azul)!important;
+}
+
+input{
+    padding: 14px 24px;
+    font-size: 16px;
+    box-shadow: 0 7px 7px var(--cor-shadow);
+    border-radius: 12px;
+    border: 2px solid var(--cor-azul);
+    color: var(--cor-azul)!important;
+    border-color: var(--cor-azul);
+}
+
+input:focus {
+    outline: none;
+    border-color: var(--cor-azul)
+}
