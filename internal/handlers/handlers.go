@@ -1,11 +1,21 @@
 package handlers
 
 import (
+	"database/sql"
 	"errors"
 	"net/http"
+	"subscriptionmanager/internal/models"
 
 	"github.com/gin-gonic/gin"
 )
+
+type Env struct {
+	db *sql.DB
+}
+
+func NewEnv(db *sql.DB) *Env {
+	return &Env{db: db}
+}
 
 // GET Handlers
 func GetLogin(c *gin.Context) {
@@ -29,11 +39,22 @@ func GetLogout(c *gin.Context) {
 }
 
 // POST Handlers
-func UserLogin(c *gin.Context) {
+func (env *Env) UserLogin(c *gin.Context) {
+	username := c.PostForm("username")
+	password := c.PostForm("password")
 
+	if username == "" || password == "" {
+		c.Error(errors.New("All fields are required")).SetMeta(400)
+		return
+	}
+	err := models.LoginUser(username, password, env.db)
+	if err != nil {
+		c.Error(err).SetMeta(400)
+		return
+	}
 }
 
-func UserRegister(c *gin.Context) {
+func (env *Env) UserRegister(c *gin.Context) {
 	username := c.PostForm("username")
 	password := c.PostForm("password")
 	confirmPassword := c.PostForm("confirmPassword")
@@ -44,6 +65,11 @@ func UserRegister(c *gin.Context) {
 	}
 	if password != confirmPassword {
 		c.Error(errors.New("passwords do not match")).SetMeta(400)
+		return
+	}
+	err := models.RegisterUser(username, password, env.db)
+	if err != nil {
+		c.Error(err).SetMeta(400)
 		return
 	}
 }

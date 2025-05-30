@@ -51,6 +51,12 @@ main{
     color: var(--cor-azul)!important;
 }
 
+span#err-msg{
+    color: #b4637a !important;
+    font-weight: bold !important;
+    margin-top: 10px !important;
+}
+
 input{
     padding: 14px 24px;
     font-size: 16px;

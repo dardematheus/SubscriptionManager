@@ -1,18 +1,21 @@
 package routes
 
 import (
-	error "SubscriptionManager/internal/error"
-	"SubscriptionManager/internal/handlers"
+	"database/sql"
+	error "subscriptionmanager/internal/error"
+	"subscriptionmanager/internal/handlers"
 
 	"github.com/gin-gonic/gin"
 )
 
 // Initializes GinRouter with middleware + handlers
-func InitRouter() *gin.Engine {
+func InitRouter(db *sql.DB) *gin.Engine {
 	router := gin.Default()
 	router.LoadHTMLGlob("web/templates/*.html")
 	router.Static("/static", "./web/static")
 	router.Use(error.ErrorHandler())
+
+	env := handlers.NewEnv(db)
 
 	//GET Requests
 	router.GET("/login", handlers.GetLogin)
@@ -22,8 +25,8 @@ func InitRouter() *gin.Engine {
 	router.GET("/logout", handlers.GetLogout)
 
 	//POST Requests
-	router.POST("/login", handlers.UserLogin)
-	router.POST("/register", handlers.UserRegister)
+	router.POST("/login", env.UserLogin)
+	router.POST("/register", env.UserRegister)
 
 	return router
 }

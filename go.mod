@@ -1,4 +1,4 @@
-module SubscriptionManager
+module subscriptionmanager
 
 go 1.24.1
 
@@ -6,6 +6,7 @@ require (
 	github.com/gin-gonic/gin v1.10.1
 	github.com/go-sql-driver/mysql v1.9.2
 	github.com/joho/godotenv v1.5.1
+	golang.org/x/crypto v0.38.0
 )
 
 require (
@@ -29,7 +30,6 @@ require (
 	github.com/twitchyliquid64/golang-asm v0.15.1 // indirect
 	github.com/ugorji/go/codec v1.2.12 // indirect
 	golang.org/x/arch v0.17.0 // indirect
-	golang.org/x/crypto v0.38.0 // indirect
 	golang.org/x/net v0.40.0 // indirect
 	golang.org/x/sys v0.33.0 // indirect
 	golang.org/x/text v0.25.0 // indirect
