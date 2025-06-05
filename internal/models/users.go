@@ -12,23 +12,42 @@ func RegisterUser(username, password string, db *sql.DB) error {
 	err := db.QueryRow("SELECT id FROM users WHERE username = ?", username).Scan(&id)
 	if err != sql.ErrNoRows {
 		if err == nil {
-			return errors.New("Username already exists")
+			return errors.New("username already exists")
 		}
 		return err
 	}
 
 	hashedpassword, err := bcrypt.GenerateFromPassword([]byte(password), bcrypt.DefaultCost)
 	if err != nil {
-		return errors.New("Error hashing password")
+		return errors.New("error hashing password")
 	}
 
 	_, err = db.Exec("INSERT INTO users (username, password) VALUES (?, ?)", username, string(hashedpassword))
 	if err != nil {
-		return errors.New("Failed to register user")
+		return errors.New("failed to register user")
 	}
 	return nil
 }
 
 func LoginUser(username, password string, db *sql.DB) error {
+	var id int
+	err := db.QueryRow("SELECT id FROM users WHERE username = ?", username).Scan(&id)
+	if err != nil {
+		if err == sql.ErrNoRows {
+			return errors.New("user does not exist")
+		}
+		return err
+	}
+
+	var storedpassword string
+	err = db.QueryRow("SELECT password FROM users WHERE id = ?", id).Scan(&storedpassword)
+	if err != nil {
+		return err
+	}
+
+	if err = bcrypt.CompareHashAndPassword([]byte(storedpassword), []byte(password)); err != nil {
+		return errors.New("invalid password")
+	}
+	return nil
 
 }

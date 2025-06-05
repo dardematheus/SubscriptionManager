@@ -44,7 +44,7 @@ func (env *Env) UserLogin(c *gin.Context) {
 	password := c.PostForm("password")
 
 	if username == "" || password == "" {
-		c.Error(errors.New("All fields are required")).SetMeta(400)
+		c.Error(errors.New("all fields are required")).SetMeta(400)
 		return
 	}
 	err := models.LoginUser(username, password, env.db)

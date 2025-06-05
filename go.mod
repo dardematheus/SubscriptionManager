@@ -3,6 +3,8 @@ module subscriptionmanager
 go 1.24.1
 
 require (
+	github.com/alexedwards/scs v1.4.1
+	github.com/alexedwards/scs/v2 v2.8.0
 	github.com/gin-gonic/gin v1.10.1
 	github.com/go-sql-driver/mysql v1.9.2
 	github.com/joho/godotenv v1.5.1

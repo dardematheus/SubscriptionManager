@@ -71,3 +71,19 @@ input:focus {
     outline: none;
     border-color: var(--cor-azul)
 }
+
+.sum-display {
+    border: 2px solid var(--cor-azul);
+    border-radius: 18px;
+    box-shadow: 0 7px 7px var(--cor-shadow);
+    padding: 12px 22px;
+}
+
+.edit-btn{
+    color: var(--cor-azul);
+    border: 2px solid var(--cor-azul);
+    border-radius: 18px;
+    box-shadow: 0 7px 7px var(--cor-shadow);
+    padding: 12px 22px;
+    background: none;
+}

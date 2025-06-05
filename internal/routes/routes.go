@@ -5,10 +5,12 @@ import (
 	error "subscriptionmanager/internal/error"
 	"subscriptionmanager/internal/handlers"
 
+	"github.com/alexedwards/scs/v2"
 	"github.com/gin-gonic/gin"
 )
 
-// Initializes GinRouter with middleware + handlers
+var session *scs.Session
+
 func InitRouter(db *sql.DB) *gin.Engine {
 	router := gin.Default()
 	router.LoadHTMLGlob("web/templates/*.html")
@@ -17,14 +19,17 @@ func InitRouter(db *sql.DB) *gin.Engine {
 
 	env := handlers.NewEnv(db)
 
-	//GET Requests
+	authRouter := router.Group("/auth")
+	{
+		authRouter.Use()
+		authRouter.GET("/")
+		authRouter.GET("edit")
+	}
+
 	router.GET("/login", handlers.GetLogin)
 	router.GET("/register", handlers.GetRegister)
-	router.GET("/", handlers.GetIndex)
-	router.GET("/edit", handlers.GetEdit)
 	router.GET("/logout", handlers.GetLogout)
 
-	//POST Requests
 	router.POST("/login", env.UserLogin)
 	router.POST("/register", env.UserRegister)
 
