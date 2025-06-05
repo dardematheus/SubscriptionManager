@@ -2,18 +2,23 @@ package main
 
 import (
 	"log"
+	"subscriptionmanager/internal/handlers"
 	"subscriptionmanager/internal/routes"
-	session "subscriptionmanager/internal/services"
+	services "subscriptionmanager/internal/services"
 )
 
 func main() {
-	db, err := session.StablishConnection()
+	db, err := services.StablishConnection()
 	if err != nil {
 		log.Fatalf("Failed to connect to DB")
 	}
 	defer db.Close()
 
-	router := routes.InitRouter(db)
+	env := &handlers.Env{
+		DB: db,
+	}
+
+	router := routes.InitRouter(env)
 
 	log.Printf("Listening on port 1308")
 	if err := router.Run(":1308"); err != nil {

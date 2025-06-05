@@ -1,34 +1,23 @@
 package routes
 
 import (
-	"database/sql"
-	error "subscriptionmanager/internal/error"
 	"subscriptionmanager/internal/handlers"
+	error "subscriptionmanager/internal/middleware"
 
-	"github.com/alexedwards/scs/v2"
 	"github.com/gin-gonic/gin"
 )
 
-var session *scs.Session
-
-func InitRouter(db *sql.DB) *gin.Engine {
+func InitRouter(env *handlers.Env) *gin.Engine {
 	router := gin.Default()
 	router.LoadHTMLGlob("web/templates/*.html")
 	router.Static("/static", "./web/static")
-	router.Use(error.ErrorHandler())
+	router.Use(error.ErrorHandlerMiddleware())
 
-	env := handlers.NewEnv(db)
-
-	authRouter := router.Group("/auth")
-	{
-		authRouter.Use()
-		authRouter.GET("/")
-		authRouter.GET("edit")
-	}
-
+	router.GET("/error", handlers.GetError)
 	router.GET("/login", handlers.GetLogin)
 	router.GET("/register", handlers.GetRegister)
 	router.GET("/logout", handlers.GetLogout)
+	router.GET("/", handlers.GetIndex)
 
 	router.POST("/login", env.UserLogin)
 	router.POST("/register", env.UserRegister)

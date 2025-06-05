@@ -10,10 +10,10 @@ import (
 )
 
 func StablishConnection() (*sql.DB, error) {
-	// Configures the database
 	if err := godotenv.Load(); err != nil {
-		log.Fatal("Error loading .env file")
+		log.Println("Error loading .env file, using environment variables")
 	}
+
 	cfg := mysql.NewConfig()
 	cfg.User = os.Getenv("DBUSER")
 	cfg.Passwd = os.Getenv("DBPASS")
