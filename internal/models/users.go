@@ -29,25 +29,24 @@ func RegisterUser(username, password string, db *sql.DB) error {
 	return nil
 }
 
-func LoginUser(username, password string, db *sql.DB) error {
+func LoginUser(username, password string, db *sql.DB) (int, error) {
 	var id int
 	err := db.QueryRow("SELECT id FROM users WHERE username = ?", username).Scan(&id)
 	if err != nil {
 		if err == sql.ErrNoRows {
-			return errors.New("user does not exist")
+			return 0, errors.New("user does not exist")
 		}
-		return err
+		return 0, err
 	}
 
 	var storedpassword string
 	err = db.QueryRow("SELECT password FROM users WHERE id = ?", id).Scan(&storedpassword)
 	if err != nil {
-		return err
+		return 0, err
 	}
 
 	if err = bcrypt.CompareHashAndPassword([]byte(storedpassword), []byte(password)); err != nil {
-		return errors.New("invalid password")
+		return 0, errors.New("invalid password")
 	}
-	return nil
-
+	return id, nil
 }

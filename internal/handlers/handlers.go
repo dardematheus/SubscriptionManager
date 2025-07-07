@@ -4,6 +4,7 @@ import (
 	"errors"
 	"net/http"
 	"subscriptionmanager/internal/models"
+	services "subscriptionmanager/internal/services"
 
 	"github.com/gin-gonic/gin"
 )
@@ -42,11 +43,17 @@ func (env *Env) UserLogin(c *gin.Context) {
 		c.Error(errors.New("all fields are required")).SetMeta(400)
 		return
 	}
-	err := models.LoginUser(username, password, env.DB)
+	userID, err := models.LoginUser(username, password, env.DB)
 	if err != nil {
 		c.Error(err).SetMeta(400)
 		return
 	}
+
+	if err = services.CreateSession(c, userID, env.DB); err != nil {
+		c.Error(err).SetMeta(400)
+		return
+	}
+
 }
 
 func (env *Env) UserRegister(c *gin.Context) {

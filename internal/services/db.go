@@ -1,8 +1,7 @@
-package session
+package services
 
 import (
 	"database/sql"
-	"log"
 	"os"
 
 	"github.com/go-sql-driver/mysql"
@@ -11,7 +10,7 @@ import (
 
 func StablishConnection() (*sql.DB, error) {
 	if err := godotenv.Load(); err != nil {
-		log.Println("Error loading .env file, using environment variables")
+		return nil, err
 	}
 
 	cfg := mysql.NewConfig()
@@ -29,6 +28,5 @@ func StablishConnection() (*sql.DB, error) {
 	if err := db.Ping(); err != nil {
 		return nil, err
 	}
-	log.Println("Database connection established successfully")
 	return db, nil
 }

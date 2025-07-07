@@ -4,10 +4,9 @@ CREATE TABLE users (
     passwordhash VARCHAR(255) NOT NULL
 );
 
-CREATE TABLE session (
-    id INT AUTO_INCREMENT PRIMARY KEY,
+CREATE TABLE sessions (
+    id INT PRIMARY KEY,
     user_id INT NOT NULL,
-    session_token VARCHAR(255) NOT NULL UNIQUE,
     FOREIGN KEY (user_id) REFERENCES users(id)
 );
 

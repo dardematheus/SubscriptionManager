@@ -2,7 +2,7 @@ package routes
 
 import (
 	"subscriptionmanager/internal/handlers"
-	error "subscriptionmanager/internal/middleware"
+	middleware "subscriptionmanager/internal/middleware"
 
 	"github.com/gin-gonic/gin"
 )
@@ -11,7 +11,14 @@ func InitRouter(env *handlers.Env) *gin.Engine {
 	router := gin.Default()
 	router.LoadHTMLGlob("web/templates/*.html")
 	router.Static("/static", "./web/static")
-	router.Use(error.ErrorHandlerMiddleware())
+	router.Use(middleware.ErrorHandlerMiddleware())
+
+	authRouter := router.Group("/auth")
+	{
+		authRouter.Use(middleware.AuthMiddleware())
+		authRouter.GET("/", handlers.GetIndex)
+		authRouter.GET("/edit", handlers.GetEdit)
+	}
 
 	router.GET("/error", handlers.GetError)
 	router.GET("/login", handlers.GetLogin)
