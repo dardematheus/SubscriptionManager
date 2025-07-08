@@ -34,6 +34,10 @@ func GetLogout(c *gin.Context) {
 	c.HTML(http.StatusOK, "web/templates/login.html", nil)
 }
 
+func GetUnauthorized(c *gin.Context) {
+	c.HTML(http.StatusUnauthorized, "error.html", nil)
+}
+
 // POST Handlers
 func (env *Env) UserLogin(c *gin.Context) {
 	username := c.PostForm("username")

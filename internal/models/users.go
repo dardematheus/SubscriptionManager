@@ -7,6 +7,7 @@ import (
 	"golang.org/x/crypto/bcrypt"
 )
 
+// REGISTER USER DANDO ERRO EM DB EXEC -> FAILED TO REGISTER USER
 func RegisterUser(username, password string, db *sql.DB) error {
 	var id int
 	err := db.QueryRow("SELECT id FROM users WHERE username = ?", username).Scan(&id)

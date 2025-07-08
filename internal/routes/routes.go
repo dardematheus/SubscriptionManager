@@ -13,18 +13,17 @@ func InitRouter(env *handlers.Env) *gin.Engine {
 	router.Static("/static", "./web/static")
 	router.Use(middleware.ErrorHandlerMiddleware())
 
-	authRouter := router.Group("/auth")
+	authRouter := router.Group("/")
+	authRouter.Use(middleware.AuthMiddleware(env.DB))
 	{
-		authRouter.Use(middleware.AuthMiddleware())
 		authRouter.GET("/", handlers.GetIndex)
 		authRouter.GET("/edit", handlers.GetEdit)
+		authRouter.GET("logout", handlers.GetLogout)
 	}
 
-	router.GET("/error", handlers.GetError)
 	router.GET("/login", handlers.GetLogin)
+	router.GET("/unauthorized", handlers.GetError)
 	router.GET("/register", handlers.GetRegister)
-	router.GET("/logout", handlers.GetLogout)
-	router.GET("/", handlers.GetIndex)
 
 	router.POST("/login", env.UserLogin)
 	router.POST("/register", env.UserRegister)

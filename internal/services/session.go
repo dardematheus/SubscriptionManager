@@ -22,12 +22,22 @@ func generateSessionID() (string, error) {
 func CreateSession(c *gin.Context, userID int, db *sql.DB) error {
 	cookie, err := c.Cookie("session_cookie")
 
-	//Sets the Cookie if doesnt exist
-	if err != nil {
-		cookie, err = generateSessionID()
-		_, err = db.Exec("INSERT INTO sessions (id, user_id) VALUES (? , ? )", cookie, userID)
+	if err == nil {
+		_, err = db.Exec("DELETE FROM sessions WHERE id = ?", cookie)
+		c.SetCookie("session_cookie", "", -1, "/", "localhost", false, true)
+	}
+
+	cookie, err = generateSessionID()
+	_, err = db.Exec("INSERT INTO sessions (id, user_id) VALUES (? , ? )", cookie, userID)
+
+	if err == nil {
 		c.SetCookie("session_cookie", cookie, 86400, "/", "localhost", false, true)
 		return nil
 	}
-	return nil
+	return err
+}
+
+func ValidateSession(db *sql.DB, cookie string) bool {
+	_, err := db.Exec("SELECT user_id FROM sessions WHERE id = ?", cookie)
+	return err == nil
 }
