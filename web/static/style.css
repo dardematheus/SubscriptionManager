@@ -79,7 +79,7 @@ input:focus {
     padding: 12px 22px;
 }
 
-.edit-btn{
+.add-btn, .rmv-btn, .edit-btn, .back-btn {
     color: var(--cor-azul);
     border: 2px solid var(--cor-azul);
     border-radius: 18px;

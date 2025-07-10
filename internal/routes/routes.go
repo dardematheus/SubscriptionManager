@@ -17,8 +17,11 @@ func InitRouter(env *handlers.Env) *gin.Engine {
 	authRouter.Use(middleware.AuthMiddleware(env.DB))
 	{
 		authRouter.GET("/", handlers.GetIndex)
-		authRouter.GET("/edit", handlers.GetEdit)
+		authRouter.GET("/add", handlers.GetAdd)
+		authRouter.GET("/remove", handlers.GetRemove)
 		authRouter.GET("logout", handlers.GetLogout)
+		authRouter.POST("/add", env.AddSubscription)
+		authRouter.POST("/remove", env.RemoveSubscription)
 	}
 
 	router.GET("/login", handlers.GetLogin)
