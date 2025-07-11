@@ -3,22 +3,12 @@ package handlers
 import (
 	"errors"
 	"net/http"
+	"strconv"
 	"subscriptionmanager/internal/models"
 	services "subscriptionmanager/internal/services"
 
 	"github.com/gin-gonic/gin"
 )
-
-type UserInfo struct {
-	Username string
-	Password string
-}
-
-type SubscriptionInfo struct {
-	Name string
-	Cost int
-	Date string
-}
 
 // GET Handlers
 func GetLogin(c *gin.Context) {
@@ -104,15 +94,20 @@ func (env *Env) UserRegister(c *gin.Context) {
 }
 
 func (env *Env) AddSubscription(c *gin.Context) {
-	subscription := c.PostForm("subscription")
-	cost := c.PostForm("cost")
-	date := c.PostForm("Date")
+	subscription := c.PostForm("name")
+	costStr := c.PostForm("cost")
+	cost, err := strconv.Atoi(costStr)
+	if err != nil {
+		c.Error(errors.New("NULL Cost")).SetMeta(400)
+		return
+	}
+	date := c.PostForm("date")
 
-	if subscription == "" || cost == "" || date == "" {
+	if subscription == "" || cost <= 0 || date == "" {
 		c.Error(errors.New("All Fields Required")).SetMeta(400)
 		return
 	}
-	if err := models.AddSubscription(subscription, cost, date, env.DB); err != nil {
+	if err = models.AddSubscription(subscription, date, cost, c, env.DB); err != nil {
 		c.Error(err).SetMeta(400)
 	}
 }
@@ -124,7 +119,7 @@ func (env *Env) RemoveSubscription(c *gin.Context) {
 		c.Error(errors.New("Subscription is required")).SetMeta(400)
 		return
 	}
-	if err := models.RemoveSubscription(subscription, env.DB); err != nil {
+	if err := models.RemoveSubscription(subscription, c, env.DB); err != nil {
 		c.Error(err).SetMeta(400)
 	}
 }

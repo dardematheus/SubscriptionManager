@@ -27,7 +27,6 @@ func InitRouter(env *handlers.Env) *gin.Engine {
 	router.GET("/login", handlers.GetLogin)
 	router.GET("/unauthorized", handlers.GetError)
 	router.GET("/register", handlers.GetRegister)
-
 	router.POST("/login", env.UserLogin)
 	router.POST("/register", env.UserRegister)
 

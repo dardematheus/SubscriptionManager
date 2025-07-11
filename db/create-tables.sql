@@ -14,7 +14,7 @@ CREATE TABLE subscriptions (
     id INT AUTO_INCREMENT PRIMARY KEY,
     user_id INT NOT NULL,
     name VARCHAR(255) NOT NULL,
-    cost DECIMAL(10, 2) NOT NULL,
-    date DATE NOT NULL,
+    cost INT NOT NULL,
+    date VARCHAR(255) NOT NULL,
     FOREIGN KEY (user_id) REFERENCES users(id)
 );
