@@ -104,12 +104,15 @@ func GetSumPerMonth(c *gin.Context, db *sql.DB) (float64, error) {
 	}
 	userID := session.UserID
 
-	var total int
+	var total sql.NullInt64
 	err := db.QueryRow("SELECT SUM(cost) FROM subscriptions WHERE user_id = ?", userID).Scan(&total)
 	if err != nil {
 		return 0, err
 	}
-	return float64(total) / 100, nil
+	if !total.Valid {
+		return 0, nil
+	}
+	return float64(total.Int64) / 100, nil
 }
 
 func GetSumPerYear(c *gin.Context, db *sql.DB) (float64, error) {
@@ -123,10 +126,13 @@ func GetSumPerYear(c *gin.Context, db *sql.DB) (float64, error) {
 	}
 	userID := session.UserID
 
-	var total int
+	var total sql.NullInt64
 	err := db.QueryRow("SELECT SUM(cost) FROM subscriptions WHERE user_id = ?", userID).Scan(&total)
 	if err != nil {
 		return 0, err
 	}
-	return float64(total) / 100 * 12, nil
+	if !total.Valid {
+		return 0, nil
+	}
+	return float64(total.Int64) / 100 * 12, nil
 }

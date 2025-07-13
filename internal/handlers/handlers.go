@@ -125,6 +125,7 @@ func (env *Env) UserRegister(c *gin.Context) {
 		c.Error(err).SetMeta(400)
 	}
 	http.Redirect(c.Writer, c.Request, "/login", http.StatusSeeOther)
+	return
 }
 
 func (env *Env) AddSubscription(c *gin.Context) {
@@ -145,6 +146,7 @@ func (env *Env) AddSubscription(c *gin.Context) {
 		c.Error(err).SetMeta(400)
 	}
 	http.Redirect(c.Writer, c.Request, "/", http.StatusSeeOther)
+	return
 }
 
 func (env *Env) RemoveSubscription(c *gin.Context) {
