@@ -3,11 +3,11 @@ package models
 import (
 	"database/sql"
 	"errors"
+	"log"
 
 	"golang.org/x/crypto/bcrypt"
 )
 
-// REGISTER USER DANDO ERRO EM DB EXEC -> FAILED TO REGISTER USER
 func RegisterUser(username, password string, db *sql.DB) error {
 	var id int
 	err := db.QueryRow("SELECT id FROM users WHERE username = ?", username).Scan(&id)
@@ -23,7 +23,8 @@ func RegisterUser(username, password string, db *sql.DB) error {
 		return errors.New("error hashing password")
 	}
 
-	_, err = db.Exec("INSERT INTO users (username, password) VALUES (?, ?)", username, string(hashedpassword))
+	log.Printf(username, hashedpassword)
+	_, err = db.Exec("INSERT INTO users (username, passwordhash) VALUES (?, ?)", username, string(hashedpassword))
 	if err != nil {
 		return errors.New("failed to register user")
 	}
@@ -41,7 +42,7 @@ func LoginUser(username, password string, db *sql.DB) (int, error) {
 	}
 
 	var storedpassword string
-	err = db.QueryRow("SELECT password FROM users WHERE id = ?", id).Scan(&storedpassword)
+	err = db.QueryRow("SELECT passwordhash FROM users WHERE id = ?", id).Scan(&storedpassword)
 	if err != nil {
 		return 0, err
 	}

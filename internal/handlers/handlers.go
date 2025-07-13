@@ -36,7 +36,7 @@ func GetRemove(c *gin.Context) {
 }
 
 func GetLogout(c *gin.Context) {
-	c.HTML(http.StatusOK, "web/templates/login.html", nil)
+	c.HTML(http.StatusOK, "login.html", nil)
 }
 
 func GetUnauthorized(c *gin.Context) {
@@ -72,7 +72,7 @@ func (env *Env) UserLogin(c *gin.Context) {
 		c.Error(err).SetMeta(400)
 		return
 	}
-	http.Redirect(c.Writer, c.Request, "/index", http.StatusSeeOther)
+	http.Redirect(c.Writer, c.Request, "/", http.StatusSeeOther)
 }
 
 func (env *Env) UserRegister(c *gin.Context) {
@@ -91,6 +91,7 @@ func (env *Env) UserRegister(c *gin.Context) {
 	if err := models.RegisterUser(username, password, env.DB); err != nil {
 		c.Error(err).SetMeta(400)
 	}
+	http.Redirect(c.Writer, c.Request, "/login", http.StatusSeeOther)
 }
 
 func (env *Env) AddSubscription(c *gin.Context) {
@@ -104,7 +105,7 @@ func (env *Env) AddSubscription(c *gin.Context) {
 	date := c.PostForm("date")
 
 	if subscription == "" || cost <= 0 || date == "" {
-		c.Error(errors.New("All Fields Required")).SetMeta(400)
+		c.Error(errors.New("all Fields Required")).SetMeta(400)
 		return
 	}
 	if err = models.AddSubscription(subscription, date, cost, c, env.DB); err != nil {
@@ -116,7 +117,7 @@ func (env *Env) RemoveSubscription(c *gin.Context) {
 	subscription := c.PostForm("subscription")
 
 	if subscription == "" {
-		c.Error(errors.New("Subscription is required")).SetMeta(400)
+		c.Error(errors.New("subscription is required")).SetMeta(400)
 		return
 	}
 	if err := models.RemoveSubscription(subscription, c, env.DB); err != nil {

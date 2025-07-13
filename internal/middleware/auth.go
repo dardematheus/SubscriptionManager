@@ -26,7 +26,7 @@ func AuthMiddleware(db *sql.DB) gin.HandlerFunc {
 			return
 		}
 
-		err = db.QueryRow("SELECT user_id FROM sessions WHERE session_id = ?", cookie).Scan(&userID)
+		err = db.QueryRow("SELECT user_id FROM sessions WHERE id = ?", cookie).Scan(&userID)
 		if err != nil {
 			http.Redirect(c.Writer, c.Request, "/unauthorized", http.StatusSeeOther)
 		}

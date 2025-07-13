@@ -5,7 +5,7 @@ CREATE TABLE users (
 );
 
 CREATE TABLE sessions (
-    id INT PRIMARY KEY,
+    id VARCHAR(255) PRIMARY KEY,
     user_id INT NOT NULL,
     FOREIGN KEY (user_id) REFERENCES users(id)
 );
