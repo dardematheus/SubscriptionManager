@@ -15,12 +15,16 @@
   <main class="d-flex justify-content-center align-items-center" style="height: 70vh;">
     <div class="text-center">
       <h2 class="mb-4">Remove Subscription</h2>
-      <form>
-        <select class="form-select mb-3">
-          <option selected>Select</option>
-        </select>
-        <button type="submit" class="btn btn-danger">Remove</button>
-      </form>
+    <form method="POST" action="/remove" id="removeSubscription" class="ajax-form" autocomplete="off">
+      <select class="form-select mb-3" name="subscription">
+        <option selected>Select</option>
+        {{range .Subscriptions}}
+          <option value="{{.Name}}">{{.Name}}</option>
+        {{end}}
+      </select>
+      <button type="submit" class="btn btn-danger">Remove</button>
+    </form>
+      <span id="err-msg"></span>
     </div>
   </main>
 

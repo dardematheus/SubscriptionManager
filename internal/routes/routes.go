@@ -16,10 +16,10 @@ func InitRouter(env *handlers.Env) *gin.Engine {
 	authRouter := router.Group("/")
 	authRouter.Use(middleware.AuthMiddleware(env.DB))
 	{
-		authRouter.GET("/", handlers.GetIndex)
+		authRouter.GET("/", env.GetIndex)
 		authRouter.GET("/add", handlers.GetAdd)
-		authRouter.GET("/remove", handlers.GetRemove)
-		authRouter.GET("logout", handlers.GetLogout)
+		authRouter.GET("/remove", env.GetRemove)
+		authRouter.GET("/logout", env.GetLogout)
 		authRouter.POST("/add", env.AddSubscription)
 		authRouter.POST("/remove", env.RemoveSubscription)
 	}

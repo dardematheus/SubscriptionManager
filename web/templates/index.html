@@ -9,15 +9,27 @@
 <body>
 
     <header class="d-flex justify-content-between align-items-center p-3">
-        <div class="sum-display">SUM</div>
+        <div class="sum-display">Mensal: R$ {{printf "%.2f" .SumPerMonth}}</div>
+        <div class="sum-display">Anual: R$ {{printf "%.2f" .SumPerYear}}</div>
         <a href="/remove" class="rmv-btn">REMOVE subscriptions</a>
         <a href="/add" class="add-btn">ADD subscriptions</a>
-        <a class="btn btn-register">Log out</a>
+        <a href="/logout" class="btn btn-register">Log out</a>
     </header>
 
-    <main>
-
-    </main>
+            <main>
+          <div class="container">
+            <h2>Minhas Subscriptions</h2>
+            <ul class="list-group">
+              {{range .Subscriptions}}
+                <li class="list-group-item d-flex justify-content-between align-items-center">
+                  <span>{{.Name}}</span>
+                  <span>{{.Date}}</span>
+                  <span>R$ {{printf "%.2f" .Cost}}</span>
+                </li>
+              {{end}}
+            </ul>
+          </div>
+        </main>
 
       <footer class="text-center py-3 text-muted">
         <img src="../static/konata.gif" alt="konata gif" style="height: 100px;"><br>

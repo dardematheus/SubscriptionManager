@@ -23,19 +23,52 @@ func GetRegister(c *gin.Context) {
 	c.HTML(http.StatusOK, "register.html", nil)
 }
 
-func GetIndex(c *gin.Context) {
-	c.HTML(http.StatusOK, "index.html", nil)
+func (env *Env) GetIndex(c *gin.Context) {
+	subscriptions, err := models.GetSubscriptions(c, env.DB)
+	if err != nil {
+		c.Error(err).SetMeta(400)
+		return
+	}
+	costPerMonth, err := models.GetSumPerMonth(c, env.DB)
+	if err != nil {
+		c.Error(err).SetMeta(400)
+		return
+	}
+	costPerYear, err := models.GetSumPerYear(c, env.DB)
+	if err != nil {
+		c.Error(err).SetMeta(400)
+		return
+	}
+	c.HTML(http.StatusOK, "index.html", gin.H{
+		"Subscriptions": subscriptions,
+		"SumPerMonth":   costPerMonth,
+		"SumPerYear":    costPerYear,
+	})
 }
 
 func GetAdd(c *gin.Context) {
 	c.HTML(http.StatusOK, "add.html", nil)
 }
 
-func GetRemove(c *gin.Context) {
-	c.HTML(http.StatusOK, "remove.html", nil)
+func (env *Env) GetRemove(c *gin.Context) {
+	subscriptions, err := models.GetSubscriptions(c, env.DB)
+	if err != nil {
+		c.Error(err).SetMeta(400)
+		return
+	}
+	c.HTML(http.StatusOK, "remove.html", gin.H{
+		"Subscriptions": subscriptions,
+	})
 }
 
-func GetLogout(c *gin.Context) {
+func (env *Env) GetLogout(c *gin.Context) {
+	cookie, err := c.Cookie("session_cookie")
+	if err != nil {
+		c.Error(errors.New("user not logged in")).SetMeta(400)
+		http.Redirect(c.Writer, c.Request, "/unauthorized", http.StatusSeeOther)
+		return
+	}
+	services.DeleteSession(c, env.DB, cookie)
 	c.HTML(http.StatusOK, "login.html", nil)
 }
 
@@ -96,13 +129,13 @@ func (env *Env) UserRegister(c *gin.Context) {
 
 func (env *Env) AddSubscription(c *gin.Context) {
 	subscription := c.PostForm("name")
+	date := c.PostForm("date")
 	costStr := c.PostForm("cost")
-	cost, err := strconv.Atoi(costStr)
+	cost, err := strconv.ParseFloat(costStr, 64)
 	if err != nil {
 		c.Error(errors.New("NULL Cost")).SetMeta(400)
 		return
 	}
-	date := c.PostForm("date")
 
 	if subscription == "" || cost <= 0 || date == "" {
 		c.Error(errors.New("all Fields Required")).SetMeta(400)
@@ -111,6 +144,7 @@ func (env *Env) AddSubscription(c *gin.Context) {
 	if err = models.AddSubscription(subscription, date, cost, c, env.DB); err != nil {
 		c.Error(err).SetMeta(400)
 	}
+	http.Redirect(c.Writer, c.Request, "/", http.StatusSeeOther)
 }
 
 func (env *Env) RemoveSubscription(c *gin.Context) {
